@@ -20,7 +20,7 @@
 
 // Ultrasound sensor delay limits
 const long max_us = 23000;
-const long min_us = 1000;
+const long min_us = 100;
 
 // PID constants
 const float Kp = 0.01;     // Proportional gain
@@ -251,32 +251,35 @@ void loop() {
     throttle_motor(0);
   
     yaw_motor(true, 255);   // Turning
-    delay(650);
+    delay(600);
 
     motors_off();           // Grace period to ensure robot comes to a stop.
     delay(355);
+
+    throttle_motor(255);
+    delay(350);
     
     measure_position();     // Set a new expected distance from the wall.
     turned = true;
   }
-  else {
+  else {                    // Second turn
     reverse(255);           // We use reverse here so that the robot stops faster.
     delay(200);
     reverse(0);
     delay(50);              // Grace period to ensure a complete stop.
 
     yaw_motor(false, 255);  // Turning
-    delay(400);
+    delay(500);
     motors_off();
 
-    throttle_motor(255);    // Move motor forward unlil it is at the wall again.
+    throttle_motor(255);    // Move motor forward until it is at the wall again.
     delay(4000);
 
     motors_off();
 
-    delay(50000);
+    delay(50000);           // Delay to grab the robot.
 
-    // Obsolete:
+        // Obsolete:
     // if(should_stop) {
     //   motors_off();
     //   delay(10000);
